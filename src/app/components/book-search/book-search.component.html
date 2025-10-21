@@ -1,0 +1,62 @@
+<div class="search-container">
+  <div class="search-header">
+    <h1>Search Books</h1>
+    <p>Find books in the LibHub library</p>
+  </div>
+
+  <div class="search-box">
+    <div class="search-input-group">
+      <input 
+        type="text" 
+        [(ngModel)]="searchQuery" 
+        (keypress)="onKeyPress($event)"
+        placeholder="Search by title or author..."
+        class="search-input">
+      <button 
+        (click)="onSearch()" 
+        [disabled]="!searchQuery.trim() || isLoading"
+        class="search-button">
+        <span *ngIf="isLoading">Searching...</span>
+        <span *ngIf="!isLoading">Search</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="loading" *ngIf="isLoading">
+    <p>Searching for books...</p>
+  </div>
+
+  <div class="results-section" *ngIf="!isLoading && hasSearched">
+    <div class="results-header">
+      <h3>Search Results ({{ books.length }} found)</h3>
+    </div>
+
+    <div class="no-results" *ngIf="books.length === 0">
+      <p>No books found matching your search criteria.</p>
+      <p>Try searching with different keywords.</p>
+    </div>
+
+    <div class="books-grid" *ngIf="books.length > 0">
+      <div class="book-card" *ngFor="let book of books">
+        <div class="book-info">
+          <h4>
+            <a [routerLink]="['/books', book.id]" class="book-title-link">
+              {{ book.title }}
+            </a>
+          </h4>
+          <p class="book-author">by {{ book.author }}</p>
+          <p class="book-isbn">ISBN: {{ book.isbn }}</p>
+        </div>
+        <div class="book-actions">
+          <a [routerLink]="['/books', book.id]" class="btn btn-primary">
+            View Details
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
