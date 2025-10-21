@@ -1,0 +1,80 @@
+<div class="book-details-container">
+  <div class="loading" *ngIf="isLoading">
+    <p>Loading book details...</p>
+  </div>
+
+  <div class="error-message" *ngIf="errorMessage && !isLoading">
+    {{ errorMessage }}
+    <button (click)="goBack()" class="btn btn-secondary">Back to Search</button>
+  </div>
+
+  <div class="book-details" *ngIf="book && !isLoading">
+    <div class="book-header">
+      <button (click)="goBack()" class="btn btn-secondary back-button">
+        ← Back to Search
+      </button>
+      <h1>{{ book.title }}</h1>
+      <p class="book-author">by {{ book.author }}</p>
+      <p class="book-isbn">ISBN: {{ book.isbn }}</p>
+    </div>
+
+    <div class="success-message" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+
+    <div class="error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <div class="copies-section">
+      <h3>Available Copies</h3>
+      
+      <div class="available-copies" *ngIf="getAvailableCopies().length > 0">
+        <div class="copy-card available" *ngFor="let copy of getAvailableCopies()">
+          <div class="copy-info">
+            <p><strong>Copy ID:</strong> {{ copy.id }}</p>
+            <p class="copy-status available">{{ copy.status }}</p>
+          </div>
+          <div class="copy-actions">
+            <button 
+              (click)="borrow(copy.id)" 
+              [disabled]="borrowingCopyId === copy.id"
+              class="btn btn-primary">
+              <span *ngIf="borrowingCopyId === copy.id">Borrowing...</span>
+              <span *ngIf="borrowingCopyId !== copy.id">Borrow</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="no-available-copies" *ngIf="getAvailableCopies().length === 0">
+        <p>No copies are currently available for borrowing.</p>
+      </div>
+
+      <div class="unavailable-copies" *ngIf="getUnavailableCopies().length > 0">
+        <h4>Unavailable Copies</h4>
+        <div class="copy-card unavailable" *ngFor="let copy of getUnavailableCopies()">
+          <div class="copy-info">
+            <p><strong>Copy ID:</strong> {{ copy.id }}</p>
+            <p class="copy-status unavailable">{{ copy.status }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="book-summary">
+      <h3>Book Summary</h3>
+      <div class="summary-grid">
+        <div class="summary-item">
+          <strong>Total Copies:</strong> {{ book.copies.length }}
+        </div>
+        <div class="summary-item">
+          <strong>Available:</strong> {{ getAvailableCopies().length }}
+        </div>
+        <div class="summary-item">
+          <strong>On Loan:</strong> {{ getUnavailableCopies().length }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
